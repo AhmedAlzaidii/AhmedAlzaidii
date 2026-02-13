@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Global Trends</title>
+
 <style>
 body{
 background:#0f172a;
@@ -10,11 +11,18 @@ color:white;
 font-family:Arial;
 padding:20px;
 }
+h1{
+color:#00c896;
+}
 .card{
 background:#1e293b;
 padding:15px;
-margin-bottom:10px;
+margin-bottom:12px;
 border-radius:12px;
+}
+.source{
+color:#00c896;
+font-size:12px;
 }
 button{
 padding:10px;
@@ -22,32 +30,62 @@ border:none;
 background:#00c896;
 color:white;
 border-radius:8px;
+margin-bottom:15px;
 }
 </style>
+
 </head>
 <body>
 
 <h1>🔥 Global Trends</h1>
-<button onclick="loadTrends()">Load Trends</button>
+<button onclick="loadTrends()">Load Real Trends</button>
+
 <div id="content"></div>
 
 <script>
+
 async function loadTrends(){
 const container = document.getElementById("content");
-container.innerHTML = "Loading...";
-
-try{
-let res = await fetch("https://api.publicapis.org/entries");
-let data = await res.json();
+container.innerHTML="Loading real trends...";
 
 container.innerHTML="";
-data.entries.slice(0,10).forEach(item=>{
-container.innerHTML+=`<div class=\"card\">\n<h3>"+item.API+"</h3>\n<p>"+item.Description+"</p>\n</div>`;
+
+
+// ===== Google Trends US =====
+let googleRSS = "https://trends.google.com/trending/rss?geo=US";
+let googleAPI = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(googleRSS);
+
+let googleRes = await fetch(googleAPI);
+let googleData = await googleRes.json();
+
+googleData.items.slice(0,5).forEach(item=>{
+container.innerHTML+=`
+<div class="card">
+<div class="source">Google Trends</div>
+<h3>${item.title}</h3>
+</div>
+`;
 });
-}catch(e){
-container.innerHTML="Error loading data";
+
+
+// ===== Reddit News =====
+let redditRSS = "https://www.reddit.com/r/news/.rss";
+let redditAPI = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(redditRSS);
+
+let redditRes = await fetch(redditAPI);
+let redditData = await redditRes.json();
+
+redditData.items.slice(0,5).forEach(item=>{
+container.innerHTML+=`
+<div class="card">
+<div class="source">Reddit</div>
+<h3>${item.title}</h3>
+</div>
+`;
+});
+
 }
-}
+
 </script>
 
 </body>
