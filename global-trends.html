@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Global Trends</title>
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+.card{
+background:#1e293b;
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+}
+button{
+padding:10px;
+border:none;
+background:#00c896;
+color:white;
+border-radius:8px;
+}
+</style>
+</head>
+<body>
+
+<h1>🔥 Global Trends</h1>
+<button onclick="loadTrends()">Load Trends</button>
+<div id="content"></div>
+
+<script>
+async function loadTrends(){
+const container = document.getElementById("content");
+container.innerHTML = "Loading...";
+
+try{
+let res = await fetch("https://api.publicapis.org/entries");
+let data = await res.json();
+
+container.innerHTML="";
+data.entries.slice(0,10).forEach(item=>{
+container.innerHTML+=`<div class=\"card\">\n<h3>"+item.API+"</h3>\n<p>"+item.Description+"</p>\n</div>`;
+});
+}catch(e){
+container.innerHTML="Error loading data";
+}
+}
+</script>
+
+</body>
+</html>
